@@ -3,7 +3,10 @@ package com.skyline.SalesManager.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +17,9 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "[User]")
 public class UserEntity extends BaseEntity implements UserDetails {
 
@@ -24,7 +30,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Column(name = "fullName")
     private String fullName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @Email
     private String email;
 
@@ -41,12 +47,12 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Column(name = "status")
     private Integer status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_role"))
     List<RoleEntity> roles = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_voucher"))
     List<VoucherEntity> vouchers = new ArrayList<>();
@@ -55,7 +61,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getRole_name())));
+        roles.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getCode())));
         return List.of(new SimpleGrantedAuthority(authorities.toString())); // trả về danh sách all role của acc và được add vào trong authorities
     }
 
@@ -76,7 +82,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status == 1;
     }
 
     @Override
@@ -86,6 +92,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return status == 1;
     }
 }
