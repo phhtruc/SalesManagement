@@ -1,6 +1,7 @@
 package com.skyline.SalesManager.config;
 
 import com.skyline.SalesManager.service.JwtService;
+import com.skyline.SalesManager.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+
     private final UserDetailsService userDetailsService;
+
+    private final TokenRepository tokenRepository;
     @SneakyThrows
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -43,9 +47,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authorizationHeader.substring(7); // Lấy sau khoảng cách của Bearer
 
         userEmail = jwtService.extractUserName(jwt); // lấy ra được email(username) trong chuỗi token
+
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){ // kiểm tra user != null và chưa xác thực
+
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenVaild(jwt, userDetails)){
+
+            var isTokenVaild = tokenRepository.findByToken(jwt)
+                    .map(t -> !t.isExpored() && !t.isRevoked())
+                    .orElse(false);
+
+            if(jwtService.isTokenVaild(jwt, userDetails) && isTokenVaild){
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, // lấy tất cả thông tin của người dùng
                         null, // xác thực bằng jwt nên không cần pass nên để null
