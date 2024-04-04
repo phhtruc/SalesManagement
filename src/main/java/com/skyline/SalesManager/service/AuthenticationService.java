@@ -1,5 +1,6 @@
 package com.skyline.SalesManager.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skyline.SalesManager.auth.AuthenticationRequest;
 import com.skyline.SalesManager.auth.AuthenticationResponse;
 import com.skyline.SalesManager.entity.RoleEntity;
@@ -7,19 +8,27 @@ import com.skyline.SalesManager.entity.UserEntity;
 import com.skyline.SalesManager.repository.RoleRepository;
 import com.skyline.SalesManager.repository.UserRepository;
 import com.skyline.SalesManager.token.Token;
-import com.skyline.SalesManager.token.TokenRepository;
+import com.skyline.SalesManager.repository.TokenRepository;
 import com.skyline.SalesManager.token.TokenType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 @RequiredArgsConstructor
@@ -48,9 +57,11 @@ public class AuthenticationService {
                 .build();
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -63,10 +74,12 @@ public class AuthenticationService {
         );
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var JwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, JwtToken);
         return AuthenticationResponse.builder()
-                .token(JwtToken)
+                .accessToken(JwtToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -90,5 +103,35 @@ public class AuthenticationService {
             t.setExpored(true);
         });
         tokenRepository.saveAll(validUserToken);
+    }
+
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        final String authorizationHeader = request.getHeader(AUTHORIZATION);
+        final String refreshToken;
+        final String userEmail;
+
+        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")){
+            return;
+        }
+
+        refreshToken = authorizationHeader.substring(7);
+
+        userEmail = jwtService.extractUserName(refreshToken);
+
+        if(userEmail != null){
+            var userDetails = this.userRepository.findByEmail(userEmail).orElseThrow();
+
+            if(jwtService.isTokenVaild(refreshToken, userDetails)){
+                var accessToken = jwtService.generateToken(userDetails);
+                revokeAllUserTokens(userDetails);
+                saveUserToken(userDetails, accessToken);
+                var authResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse); // Chuyen thanh chuoi json
+            }
+        }
     }
 }

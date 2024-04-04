@@ -13,5 +13,13 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
+application:
+  security:
+    jwt:
+      secret-key : 89dd3a965fddb1460b64c074c928ee19f6697a168bc5ec72c336fb6df64289c4
+      expriration : 86400000 # a day
+      refresh-token :
+        expriration : 604800000 # 7 days
+
 server:
   port: 8181

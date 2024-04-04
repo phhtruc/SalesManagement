@@ -1,7 +1,7 @@
 package com.skyline.SalesManager.config;
 
 import com.skyline.SalesManager.service.JwtService;
-import com.skyline.SalesManager.token.TokenRepository;
+import com.skyline.SalesManager.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
