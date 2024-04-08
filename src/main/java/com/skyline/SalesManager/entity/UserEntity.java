@@ -95,4 +95,10 @@ public class UserEntity extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return status == 1;
     }
+
+    public List<String> getRole(){
+        return roles.stream()
+                .map(RoleEntity::getCode)
+                .collect(Collectors.toList());
+    }
 }

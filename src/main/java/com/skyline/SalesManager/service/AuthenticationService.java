@@ -78,6 +78,11 @@ public class AuthenticationService {
         revokeAllUserTokens(user);
         saveUserToken(user, JwtToken);
         return AuthenticationResponse.builder()
+                .tokenType(TokenType.BEARER)
+                .id(user.getId_user())
+                .username(user.getUsername())
+                .roles(user.getRole())
+                .message("Login success")
                 .accessToken(JwtToken)
                 .refreshToken(refreshToken)
                 .build();
