@@ -1,5 +1,6 @@
 package com.skyline.SalesManager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,6 +22,7 @@ public class RoleEntity extends BaseEntity{
     @Column(name = "role_name")
     private String role_name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     List<UserEntity> userEntities = new ArrayList<>();
 

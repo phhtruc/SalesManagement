@@ -43,6 +43,7 @@ public class JwtService {
                 .getBody(); // lấy thông tin
     } // Giải mã chuỗi token và chứa thông tin đó vào Claims
 
+    // Trả về một khóa dùng để ký JWT dựa trên một chuỗi secret key.
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKkey);
         return Keys.hmacShaKeyFor(keyBytes);

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -60,9 +61,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getCode())));
-        return List.of(new SimpleGrantedAuthority(authorities.toString())); // trả về danh sách all role của acc và được add vào trong authorities
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getCode()))
+                .collect(Collectors.toList()); // trả về danh sách all role của acc và được add vào trong authorities
     }
 
     @Override
