@@ -10,8 +10,8 @@ public class BrandEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_brand;
+    private long idBrand;
 
-    @Column(name="brand_name")
-    private String brand_name;
+    @Column(name="brandName")
+    private String brandName;
 }

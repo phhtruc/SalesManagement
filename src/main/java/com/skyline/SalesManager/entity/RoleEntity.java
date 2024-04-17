@@ -14,13 +14,13 @@ public class RoleEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_role;
+    private long idRole;
 
     @Column(name = "code")
     private String code;
 
-    @Column(name = "role_name")
-    private String role_name;
+    @Column(name = "roleName")
+    private String roleName;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")

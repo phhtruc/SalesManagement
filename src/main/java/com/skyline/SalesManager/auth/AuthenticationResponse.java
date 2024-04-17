@@ -1,8 +1,7 @@
 package com.skyline.SalesManager.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.skyline.SalesManager.entity.RoleEntity;
-import com.skyline.SalesManager.token.TokenType;
+import com.skyline.SalesManager.enum_token.TokenType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;

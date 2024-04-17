@@ -19,13 +19,13 @@ public class OrderDetailsEntity extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idProduct")
-    @JoinColumn(name = "id_product", nullable = false)
+    @JoinColumn(name = "idProduct", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductEntity productEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idOrder")
-    @JoinColumn(name = "id_order", nullable = false)
+    @JoinColumn(name = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private OrderEntity orderEntity;
 
@@ -46,10 +46,10 @@ public class OrderDetailsEntity extends BaseEntity{
 @Data
 class OrderDetailsId implements Serializable {
 
-    @Column(name = "id_order")
+    @Column(name = "idOrder")
     private long idOrder;
 
-    @Column(name = "id_product")
+    @Column(name = "idProduct")
     private long idProduct;
 
 }

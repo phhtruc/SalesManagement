@@ -16,7 +16,7 @@ public class VoucherEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_voucher;
+    private long idVoucher;
 
     @Column(name = "voucherCode", unique = true)
     private String VoucherCode;

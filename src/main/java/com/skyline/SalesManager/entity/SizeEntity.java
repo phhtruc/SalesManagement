@@ -12,25 +12,17 @@ import java.util.List;
 @Table(name = "Size")
 public class SizeEntity extends BaseEntity{
 
-    @EmbeddedId
-    private SizeId sizeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long idSize;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId("id_cate")
-    @JoinColumn(name = "id_cate")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idCate")
     private CategoryEntity categoryEntity;
 
-    @Column(name = "size_name")
+    @Column(name = "sizeName")
     private String sizeName;
 
     @ManyToMany(mappedBy = "sizes")
     List<ProductEntity> productEntities = new ArrayList<>();
-}
-
-@Embeddable
-@Data
-class SizeId implements Serializable {
-
-    @Column(name = "id_cate")
-    private long idCate;
 }

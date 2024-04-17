@@ -7,19 +7,16 @@ import com.skyline.SalesManager.entity.RoleEntity;
 import com.skyline.SalesManager.entity.UserEntity;
 import com.skyline.SalesManager.repository.RoleRepository;
 import com.skyline.SalesManager.repository.UserRepository;
-import com.skyline.SalesManager.token.Token;
+import com.skyline.SalesManager.entity.Token;
 import com.skyline.SalesManager.repository.TokenRepository;
-import com.skyline.SalesManager.token.TokenType;
+import com.skyline.SalesManager.enum_token.TokenType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -79,7 +76,7 @@ public class AuthenticationService {
         saveUserToken(user, JwtToken);
         return AuthenticationResponse.builder()
                 .tokenType(TokenType.BEARER)
-                .id(user.getId_user())
+                .id(user.getIdUser())
                 .username(user.getUsername())
                 .roles(user.getRole())
                 .message("Login success")
@@ -100,7 +97,7 @@ public class AuthenticationService {
     }
 
     private void revokeAllUserTokens(UserEntity user){
-        var validUserToken = tokenRepository.findAllValidTokenByUser(user.getId_user());
+        var validUserToken = tokenRepository.findAllValidTokenByUser(user.getIdUser());
         if(validUserToken.isEmpty())
             return;
         validUserToken.forEach(t -> {

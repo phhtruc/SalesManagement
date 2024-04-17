@@ -10,9 +10,8 @@ public class CategoryEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cate")
-    private long id_cate;
+    private long idCate;
 
-    @Column(name="cate_name")
-    private String cate_name;
+    @Column(name="cateName")
+    private String cateName;
 }

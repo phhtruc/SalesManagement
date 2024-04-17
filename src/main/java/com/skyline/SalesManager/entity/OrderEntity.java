@@ -14,10 +14,10 @@ public class OrderEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_order;
+    private long idOrder;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_user", nullable = false)
+    @JoinColumn(name = "idUser", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity userEntity;
 
@@ -39,7 +39,7 @@ public class OrderEntity extends BaseEntity{
     private String paymentStatus;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_voucher", nullable = false)
+    @JoinColumn(name = "idVoucher", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private VoucherEntity voucherEntity;
 }

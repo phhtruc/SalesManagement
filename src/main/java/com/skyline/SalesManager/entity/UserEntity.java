@@ -26,7 +26,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_user;
+    private long idUser;
 
     @Column(name = "fullName")
     private String fullName;
@@ -49,13 +49,13 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private Integer status;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_role"))
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "idRole"))
     List<RoleEntity> roles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_voucher"))
+    @JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "idVoucher"))
     List<VoucherEntity> vouchers = new ArrayList<>();
 
 

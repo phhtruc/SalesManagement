@@ -17,13 +17,13 @@ public class EvaluationEntity extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idCust")
-    @JoinColumn(name = "id_user", nullable = false)
+    @JoinColumn(name = "idUser", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idProduct")
-    @JoinColumn(name = "id_product", nullable = false)
+    @JoinColumn(name = "idProduct", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductEntity productEntity;
 
@@ -43,9 +43,9 @@ public class EvaluationEntity extends BaseEntity{
 @Data
 class EvaluationId implements Serializable {
 
-    @Column(name = "id_cust")
+    @Column(name = "idCust")
     private long idCust;
 
-    @Column(name = "id_product")
+    @Column(name = "idProduct")
     private long idProduct;
 }
