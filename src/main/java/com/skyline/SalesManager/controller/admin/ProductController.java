@@ -5,8 +5,8 @@ import com.skyline.SalesManager.repository.ProductRepository;
 import com.skyline.SalesManager.service.ProductService;
 import com.skyline.SalesManager.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/admin/products")
 public class ProductController {
 
     private final ProductRepository productRepository;
@@ -26,6 +26,12 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts(){
         return ResponseEntity.ok(productRepository.findAllProduct());
+    }
+
+
+    @GetMapping("/{idProduct}")
+    public ResponseEntity<ProductDTO> getOneProduct(@PathVariable long idProduct){
+        return ResponseEntity.ok(productRepository.findOneProduct(idProduct));
     }
 
     @PostMapping
@@ -43,9 +49,16 @@ public class ProductController {
         return responseUtil.createSuccessResponse(responseData, "/api/v1/products/");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
-        productService.updateProduct(id, productDTO);
+    @PutMapping("/{idProduct}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long idProduct, @RequestBody ProductDTO productDTO){
+        productService.updateProduct(idProduct, productDTO);
+        return ResponseEntity.ok(200);
+    }
+
+    @DeleteMapping("/{idProduct}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteProduct(@PathVariable Long idProduct){
+        productRepository.deleteById(idProduct);
         return ResponseEntity.ok(200);
     }
 }

@@ -1,17 +1,14 @@
 package com.skyline.SalesManager.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-@Builder
-public class ProductDTO {
+public class ProductDTO{
+
     private long idProduct;
     private String productName;
     private Double price;
@@ -20,7 +17,7 @@ public class ProductDTO {
     private String brandName;
     private String categoryName;
 
-    public ProductDTO(Object[] objects) {
+    /*public ProductDTO(Object[] objects) {
         this.idProduct = (Long) objects[0];
         this.productName = (String) objects[1];
         this.price = (Double) objects[2];
@@ -28,5 +25,5 @@ public class ProductDTO {
         this.quantity = (Integer) objects[4];
         this.brandName = (String) objects[5];
         this.categoryName = (String) objects[6];
-    }
+    }*/
 }

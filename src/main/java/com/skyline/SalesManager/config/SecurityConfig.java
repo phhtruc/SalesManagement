@@ -32,8 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize  // cấu hình ủy quyền cho các request HTTP
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/home").hasAnyAuthority("USER")
-                        .requestMatchers("/api/v1/admin/home").hasAnyAuthority("ADMIN")
-                        //.requestMatchers("/api/v1/products").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated()) // Adjust code style settings
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // không lưu trữ  session  trên server
                 .authenticationProvider(authenticationProvider) // xử lý xác thực người dùng
