@@ -16,17 +16,17 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
+    @Column(name="createdBy",updatable = false)
+    @CreatedBy
+    private String createdBy;
+
     @Column(name="createdDate", updatable = false)
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @Column(name="modifiedDate", updatable = false)
+    @Column(name="modifiedDate")
     @LastModifiedDate
     private LocalDateTime modifiedDate;
-
-    @Column(name="createdBy")
-    @CreatedBy
-    private String createdBy;
 
     @Column(name="modifiedBy")
     @LastModifiedBy

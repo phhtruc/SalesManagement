@@ -1,12 +1,18 @@
 package com.skyline.SalesManager.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Data
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "ProductImage")
 public class ProductImageEntity extends BaseEntity{
 
@@ -21,4 +27,5 @@ public class ProductImageEntity extends BaseEntity{
     @JoinColumn(name = "idProduct", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductEntity productEntity;
+
 }

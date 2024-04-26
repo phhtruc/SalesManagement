@@ -3,11 +3,13 @@ package com.skyline.SalesManager.controller.admin;
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.repository.ProductRepository;
 import com.skyline.SalesManager.service.ProductService;
+import com.skyline.SalesManager.service.impl.ProductServiceImpl;
 import com.skyline.SalesManager.util.ResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class ProductController {
         return ResponseEntity.ok(productRepository.findOneProduct(idProduct));
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<Map<String, Object>> createProduct(@RequestBody ProductDTO product){
         productService.addProduct(product);
         Map<String, Object> responseData = Map.of(
@@ -47,6 +49,13 @@ public class ProductController {
         );
 
         return responseUtil.createSuccessResponse(responseData, "/api/v1/products/");
+    }*/
+
+    @PostMapping
+    public ResponseEntity<?> addProduct(@RequestParam("file") List<MultipartFile> multipartFile,
+                                        @ModelAttribute ProductDTO productDTO){
+        productService.addProduct(productDTO, multipartFile);
+        return ResponseEntity.ok("File uploaded successfully");
     }
 
     @PutMapping("/{idProduct}")
