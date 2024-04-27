@@ -1,5 +1,6 @@
 package com.skyline.SalesManager.entity;
 
+import com.skyline.SalesManager.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -46,7 +48,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String avatar;
 
     @Column(name = "status")
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "idUser"),
@@ -83,7 +86,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return status == 1;
+        return userStatus == UserStatus.ACTIVE;
     }
 
     @Override
@@ -93,7 +96,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return status == 1;
+        return userStatus == UserStatus.ACTIVE;
     }
 
     public List<String> getRole(){

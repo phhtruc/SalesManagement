@@ -1,6 +1,5 @@
 package com.skyline.SalesManager.service.impl;
 
-import com.skyline.SalesManager.dto.FileDTO;
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.entity.*;
 import com.skyline.SalesManager.repository.*;

@@ -5,11 +5,12 @@ import com.skyline.SalesManager.auth.AuthenticationRequest;
 import com.skyline.SalesManager.auth.AuthenticationResponse;
 import com.skyline.SalesManager.entity.RoleEntity;
 import com.skyline.SalesManager.entity.UserEntity;
+import com.skyline.SalesManager.enums.UserStatus;
 import com.skyline.SalesManager.repository.RoleRepository;
 import com.skyline.SalesManager.repository.UserRepository;
 import com.skyline.SalesManager.entity.Token;
 import com.skyline.SalesManager.repository.TokenRepository;
-import com.skyline.SalesManager.enum_token.TokenType;
+import com.skyline.SalesManager.enums.TokenType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class AuthenticationService {
                 .email(userEntity.getEmail())
                 .phone(userEntity.getPhone())
                 .password(passwordEncoder.encode(userEntity.getPassword()))
-                .status(1)
+                .userStatus(UserStatus.ACTIVE)
                 .roles(roles)
                 .build();
         var savedUser = userRepository.save(user);

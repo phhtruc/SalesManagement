@@ -3,8 +3,8 @@ package com.skyline.SalesManager.controller.admin;
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.repository.ProductRepository;
 import com.skyline.SalesManager.service.ProductService;
-import com.skyline.SalesManager.service.impl.ProductServiceImpl;
 import com.skyline.SalesManager.util.ResponseUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> addProduct(@RequestParam("file") List<MultipartFile> multipartFile,
-                                        @ModelAttribute ProductDTO productDTO){
+                                        @Valid @ModelAttribute ProductDTO productDTO){
         productService.addProduct(productDTO, multipartFile);
         return ResponseEntity.ok("File uploaded successfully");
     }

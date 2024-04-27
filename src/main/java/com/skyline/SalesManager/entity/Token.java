@@ -1,6 +1,6 @@
 package com.skyline.SalesManager.entity;
 
-import com.skyline.SalesManager.enum_token.TokenType;
+import com.skyline.SalesManager.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
