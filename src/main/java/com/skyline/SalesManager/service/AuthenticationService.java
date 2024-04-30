@@ -5,6 +5,7 @@ import com.skyline.SalesManager.auth.AuthenticationRequest;
 import com.skyline.SalesManager.auth.AuthenticationResponse;
 import com.skyline.SalesManager.entity.RoleEntity;
 import com.skyline.SalesManager.entity.UserEntity;
+import com.skyline.SalesManager.enums.CodeRole;
 import com.skyline.SalesManager.enums.UserStatus;
 import com.skyline.SalesManager.repository.RoleRepository;
 import com.skyline.SalesManager.repository.UserRepository;
@@ -40,7 +41,7 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     public AuthenticationResponse register(UserEntity userEntity) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-        RoleEntity userRole = roleRepository.findByCode("USER").orElseThrow(() -> new UsernameNotFoundException("role not found"));
+        RoleEntity userRole = roleRepository.findByCodeRole(CodeRole.USER).orElseThrow(() -> new UsernameNotFoundException("role not found"));
 
         List<RoleEntity> roles = new ArrayList<>();
         roles.add(userRole);

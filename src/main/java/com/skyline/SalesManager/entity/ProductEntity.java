@@ -1,6 +1,7 @@
 package com.skyline.SalesManager.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,7 @@ public class ProductEntity extends BaseEntity{
     private String description;
 
     @Column(name = "quantity")
-    @Positive
+    @Min(1)
     private int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE) // optional entity bat buoc, phai co .

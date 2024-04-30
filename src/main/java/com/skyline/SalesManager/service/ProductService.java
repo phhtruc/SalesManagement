@@ -9,7 +9,11 @@ import java.util.List;
 @Service
 public interface ProductService {
 
-    public void addProduct(ProductDTO p, List<MultipartFile> multipartFile);
+    public ProductDTO addProduct(ProductDTO p, List<MultipartFile> multipartFile);
 
     public void updateProduct(long id, ProductDTO productDTO);
+
+    public ProductDTO findProductById(long idProduct);
+
+    public List<ProductDTO> findAllProducts();
 }

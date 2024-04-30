@@ -2,8 +2,8 @@ package com.skyline.SalesManager.controller.admin;
 
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.repository.ProductRepository;
+import com.skyline.SalesManager.response.ResponseData;
 import com.skyline.SalesManager.service.ProductService;
-import com.skyline.SalesManager.util.ResponseUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,51 +22,50 @@ public class ProductController {
 
     private final ProductService productService;
 
-    private final ResponseUtil responseUtil;
-
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAllProducts(){
-        return ResponseEntity.ok(productRepository.findAllProduct());
-    }
+    public ResponseData<?> getAllProducts(){
+        List<ProductDTO> productDTO = productService.findAllProducts();
+        try {
+            return new ResponseData<>(HttpStatus.OK.value(), "Get All Product Success", productDTO);
+        }catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Get All Product Failed");
+        }
 
+    }
 
     @GetMapping("/{idProduct}")
-    public ResponseEntity<ProductDTO> getOneProduct(@PathVariable long idProduct){
-        return ResponseEntity.ok(productRepository.findOneProduct(idProduct));
+    public ResponseData<?> getOneProduct(@PathVariable long idProduct){
+        ProductDTO productDTO = productService.findProductById(idProduct);
+        try {
+            return new ResponseData<>(HttpStatus.OK.value(), "Get Product success", productDTO);
+        }catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Get Product Failed");
+        }
     }
-
-    /*@PostMapping
-    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody ProductDTO product){
-        productService.addProduct(product);
-        Map<String, Object> responseData = Map.of(
-                "name", product.getProductName(),
-                "price", product.getPrice(),
-                "description", product.getDescription(),
-                "quantity", product.getQuantity(),
-                "brandName", product.getBrandName(),
-                "categoryName", product.getCategoryName()
-        );
-
-        return responseUtil.createSuccessResponse(responseData, "/api/v1/products/");
-    }*/
 
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestParam("file") List<MultipartFile> multipartFile,
-                                        @Valid @ModelAttribute ProductDTO productDTO){
-        productService.addProduct(productDTO, multipartFile);
-        return ResponseEntity.ok("File uploaded successfully");
+    public ResponseData<?> addProduct(@RequestParam("file") List<MultipartFile> multipartFile,
+                                   @Valid @ModelAttribute ProductDTO productDTO){
+        ProductDTO dto = productService.addProduct(productDTO, multipartFile);
+        try {
+            return new ResponseData<>(HttpStatus.CREATED.value(), "Add product success", dto);
+        }catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Add Product Failed");
+        }
     }
 
-    @PutMapping("/{idProduct}")
+    @PatchMapping("/{idProduct}")
     public ResponseEntity<?> updateProduct(@PathVariable Long idProduct, @RequestBody ProductDTO productDTO){
         productService.updateProduct(idProduct, productDTO);
         return ResponseEntity.ok(200);
     }
 
     @DeleteMapping("/{idProduct}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<?> deleteProduct(@PathVariable Long idProduct){
-        productRepository.deleteById(idProduct);
-        return ResponseEntity.ok(200);
+    public ResponseData<?> deleteProduct(@PathVariable Long idProduct){
+        try {
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Delete product success");
+        }catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Delete Product Failed");
+        }
     }
 }

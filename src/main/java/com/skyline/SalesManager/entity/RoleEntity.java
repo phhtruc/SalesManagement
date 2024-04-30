@@ -1,6 +1,7 @@
 package com.skyline.SalesManager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.skyline.SalesManager.enums.CodeRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +17,8 @@ public class RoleEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idRole;
 
-    @Column(name = "code")
-    private String code;
+    @Enumerated(EnumType.STRING)
+    private CodeRole codeRole;
 
     @Column(name = "roleName")
     private String roleName;

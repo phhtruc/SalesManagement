@@ -1,5 +1,6 @@
 package com.skyline.SalesManager.entity;
 
+import com.skyline.SalesManager.enums.CodeRole;
 import com.skyline.SalesManager.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -65,7 +66,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getCode()))
+                .map(role -> new SimpleGrantedAuthority(role.getCodeRole().name()))
                 .collect(Collectors.toList()); // trả về danh sách all role của acc và được add vào trong authorities
     }
 
@@ -101,7 +102,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     public List<String> getRole(){
         return roles.stream()
-                .map(RoleEntity::getCode)
+                .map(RoleEntity::getCodeRole)
+                .map(CodeRole::name)
                 .collect(Collectors.toList());
     }
 }

@@ -30,7 +30,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable) // Tắt chức năng bảo vệ CSRF
                 .authorizeHttpRequests(authorize -> authorize  // cấu hình ủy quyền cho các request HTTP
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs")
+                        .permitAll()
                         .requestMatchers("/api/v1/home").hasAnyAuthority("USER")
                         .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated()) // Adjust code style settings

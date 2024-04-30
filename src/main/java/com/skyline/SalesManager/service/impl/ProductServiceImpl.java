@@ -24,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
     private final ImageService imageService;
 
     @Override
-    public void addProduct(ProductDTO p, List<MultipartFile> multipartFile) {
+    public ProductDTO addProduct(ProductDTO p, List<MultipartFile> multipartFile) {
         BrandEntity brand = brandRepository.findByBrandName(p.getBrandName())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
         CategoryEntity category = categoryRepository.findByCateName(p.getCategoryName())
@@ -32,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
         List<SizeEntity> sizeEntitySet = p.getSizeName().stream()
                 .map(sizeName -> sizeRepository.findBySizeName(sizeName)
                         .orElseThrow(() -> new RuntimeException("Size not found")))
+                .flatMap(List::stream) // Làm phẳng danh sách các SizeEntity thành một Stream duy nhất
                 .collect(Collectors.toList());
 
         var product = ProductEntity.builder()
@@ -55,6 +56,19 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
         productRepository.save(product);
         productImageRepository.saveAll(productImages);
+
+        return ProductDTO.builder()
+                .idProduct(product.getIdProduct())
+                .productName(p.getProductName())
+                .price(p.getPrice())
+                .description(p.getDescription())
+                .quantity(p.getQuantity())
+                .brandName(p.getBrandName())
+                .categoryName(p.getCategoryName())
+                .sizeName(p.getSizeName())
+                .fileName(productImageRepository.findImageNameByIdProduct(product.getIdProduct())
+                        .orElseThrow())
+                .build();
     }
 
     @Override
@@ -73,6 +87,26 @@ public class ProductServiceImpl implements ProductService {
             p.setCategoryEntity(category.get());
             return productRepository.save(p);
         }).orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    @Override
+    public ProductDTO findProductById(long idProduct) {
+        Optional<List<String>> listSizeName = sizeRepository.findSizeNameByIdProduct(idProduct);
+        Optional<List<String>> listFileName = productImageRepository.findImageNameByIdProduct(idProduct);
+        ProductDTO productDTO = productRepository.findProductById(idProduct);
+        productDTO.setSizeName(listSizeName.orElseThrow(() -> new RuntimeException("Size not found")));
+        productDTO.setFileName(listFileName.orElseThrow(() -> new RuntimeException("File not found")));
+        return productDTO;
+    }
+
+    @Override
+    public List<ProductDTO> findAllProducts() {
+        return productRepository.findAllProduct().stream()
+                .peek(p -> {
+                    p.setSizeName(sizeRepository.findSizeNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("Size not found")));
+                    p.setFileName(productImageRepository.findImageNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("File not found")));
+                })
+                .collect(Collectors.toList());
     }
 
 }
