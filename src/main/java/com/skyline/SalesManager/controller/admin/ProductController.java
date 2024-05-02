@@ -44,7 +44,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseData<?> addProduct(@RequestParam("file") List<MultipartFile> multipartFile,
+    public ResponseData<?> addProduct(@RequestParam(value = "file", required = false) List<MultipartFile> multipartFile,
                                    @Valid @ModelAttribute ProductDTO productDTO){
         ProductDTO dto = productService.addProduct(productDTO, multipartFile);
         try {
@@ -54,10 +54,15 @@ public class ProductController {
         }
     }
 
-    @PatchMapping("/{idProduct}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long idProduct, @RequestBody ProductDTO productDTO){
-        productService.updateProduct(idProduct, productDTO);
-        return ResponseEntity.ok(200);
+    @PutMapping("/{idProduct}")
+    public ResponseData<?> updateProduct(@PathVariable Long idProduct,
+                                           @Valid @ModelAttribute ProductDTO productDTO,
+                                           @RequestParam(value = "file", required = false) List<MultipartFile> multipartFile){
+        try {
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Update product success");
+        }catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Update Product Failed");
+        }
     }
 
     @DeleteMapping("/{idProduct}")

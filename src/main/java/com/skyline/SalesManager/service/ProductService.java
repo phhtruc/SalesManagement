@@ -11,7 +11,7 @@ public interface ProductService {
 
     public ProductDTO addProduct(ProductDTO p, List<MultipartFile> multipartFile);
 
-    public void updateProduct(long id, ProductDTO productDTO);
+    public void updateProduct(long id, ProductDTO productDTO, List<MultipartFile> multipartFile);
 
     public ProductDTO findProductById(long idProduct);
 

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -72,21 +73,44 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(long id, ProductDTO productDTO) {
+    public void updateProduct(long id, ProductDTO productDTO, List<MultipartFile> multipartFile) {
         Optional<BrandEntity> brand = Optional.of(brandRepository.findByBrandName(productDTO.getBrandName())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
         Optional<CategoryEntity> category = Optional.of(categoryRepository.findByCateName(productDTO.getCategoryName())
                 .orElseThrow(() -> new RuntimeException("Cate not found")));
+        List<SizeEntity> sizeEntitySet = productDTO.getSizeName().stream()
+                .map(sizeName -> sizeRepository.findBySizeName(sizeName)
+                        .orElseThrow(() -> new RuntimeException("Size not found")))
+                .flatMap(List::stream) // Làm phẳng danh sách các SizeEntity thành một Stream duy nhất
+                .collect(Collectors.toList());
 
-        productRepository.findById(id).map(p -> {
+        ProductEntity product = productRepository.findById(id).map(p -> {
             p.setProductName(productDTO.getProductName());
             p.setPrice(productDTO.getPrice());
             p.setDescription(productDTO.getDescription());
             p.setQuantity(productDTO.getQuantity());
             p.setBrandEntity(brand.get());
             p.setCategoryEntity(category.get());
+            p.setSizes(sizeEntitySet);
             return productRepository.save(p);
         }).orElseThrow(() -> new RuntimeException("Product not found"));
+
+        //Update fileName
+        for (MultipartFile file : multipartFile) {
+            String imageUrl = imageService.upload(file);
+            List<String> imageNames = productImageRepository.findImageNameByIdProduct(product.getIdProduct())
+                    .orElseThrow(() -> new RuntimeException("Image not found"));
+            for (String imageName : imageNames) {
+                List<ProductImageEntity> imageEntities = productImageRepository.findByImageName(imageName);
+                for (ProductImageEntity imageEntity : imageEntities) {
+                    imageEntity.setImage(imageUrl);
+                    productImageRepository.save(imageEntity);
+                }
+            }
+        }
+        //Update sizeName
+
+
     }
 
     @Override
