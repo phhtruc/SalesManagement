@@ -91,26 +91,32 @@ public class ProductServiceImpl implements ProductService {
             p.setQuantity(productDTO.getQuantity());
             p.setBrandEntity(brand.get());
             p.setCategoryEntity(category.get());
+            p.getSizes().clear();
             p.setSizes(sizeEntitySet);
             return productRepository.save(p);
         }).orElseThrow(() -> new RuntimeException("Product not found"));
 
-        //Update fileName
-        for (MultipartFile file : multipartFile) {
-            String imageUrl = imageService.upload(file);
-            List<String> imageNames = productImageRepository.findImageNameByIdProduct(product.getIdProduct())
-                    .orElseThrow(() -> new RuntimeException("Image not found"));
-            for (String imageName : imageNames) {
-                List<ProductImageEntity> imageEntities = productImageRepository.findByImageName(imageName);
-                for (ProductImageEntity imageEntity : imageEntities) {
-                    imageEntity.setImage(imageUrl);
-                    productImageRepository.save(imageEntity);
-                }
-            }
-        }
-        //Update sizeName
+        // Update file
+        productImageRepository.deleteByIdProductEntity(id);
+        List<ProductImageEntity> productImageEntity = multipartFile.stream()
+                .map(multipartFile1 -> {
+                    String imageUrl = imageService.upload(multipartFile1);
+                    return ProductImageEntity.builder()
+                            .image(imageUrl)
+                            .productEntity(product)
+                            .build();
+                })
+                .collect(Collectors.toList());
+        productImageRepository.saveAll(productImageEntity);
 
-
+        //Update size
+        /*List<SizeEntity> sizeEntitySet = productDTO.getSizeName().stream()
+                .map(sizeName -> sizeRepository.findBySizeName(sizeName)
+                        .orElseThrow(() -> new RuntimeException("Size not found")))
+                .flatMap(List::stream) // Làm phẳng danh sách các SizeEntity thành một Stream duy nhất
+                .collect(Collectors.toList());
+        ProductEntity productSize = productRepository.findProductById(id)
+        productRepository.save(productSize);*/
     }
 
     @Override

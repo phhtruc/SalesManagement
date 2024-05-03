@@ -24,8 +24,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseData<?> getAllProducts(){
-        List<ProductDTO> productDTO = productService.findAllProducts();
         try {
+            List<ProductDTO> productDTO = productService.findAllProducts();
             return new ResponseData<>(HttpStatus.OK.value(), "Get All Product Success", productDTO);
         }catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Get All Product Failed");
@@ -35,8 +35,8 @@ public class ProductController {
 
     @GetMapping("/{idProduct}")
     public ResponseData<?> getOneProduct(@PathVariable long idProduct){
-        ProductDTO productDTO = productService.findProductById(idProduct);
         try {
+            ProductDTO productDTO = productService.findProductById(idProduct);
             return new ResponseData<>(HttpStatus.OK.value(), "Get Product success", productDTO);
         }catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Get Product Failed");
@@ -46,8 +46,8 @@ public class ProductController {
     @PostMapping
     public ResponseData<?> addProduct(@RequestParam(value = "file", required = false) List<MultipartFile> multipartFile,
                                    @Valid @ModelAttribute ProductDTO productDTO){
-        ProductDTO dto = productService.addProduct(productDTO, multipartFile);
         try {
+            ProductDTO dto = productService.addProduct(productDTO, multipartFile);
             return new ResponseData<>(HttpStatus.CREATED.value(), "Add product success", dto);
         }catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Add Product Failed");
@@ -59,6 +59,7 @@ public class ProductController {
                                            @Valid @ModelAttribute ProductDTO productDTO,
                                            @RequestParam(value = "file", required = false) List<MultipartFile> multipartFile){
         try {
+            productService.updateProduct(idProduct, productDTO, multipartFile);
             return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Update product success");
         }catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Update Product Failed");
@@ -68,6 +69,7 @@ public class ProductController {
     @DeleteMapping("/{idProduct}")
     public ResponseData<?> deleteProduct(@PathVariable Long idProduct){
         try {
+            productRepository.deleteById(idProduct);
             return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Delete product success");
         }catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Delete Product Failed");
