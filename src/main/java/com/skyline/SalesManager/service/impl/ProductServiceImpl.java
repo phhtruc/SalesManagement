@@ -3,15 +3,17 @@ package com.skyline.SalesManager.service.impl;
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.entity.*;
 import com.skyline.SalesManager.repository.*;
+import com.skyline.SalesManager.response.ResponseError;
 import com.skyline.SalesManager.service.ImageService;
 import com.skyline.SalesManager.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -108,15 +110,6 @@ public class ProductServiceImpl implements ProductService {
                 })
                 .collect(Collectors.toList());
         productImageRepository.saveAll(productImageEntity);
-
-        //Update size
-        /*List<SizeEntity> sizeEntitySet = productDTO.getSizeName().stream()
-                .map(sizeName -> sizeRepository.findBySizeName(sizeName)
-                        .orElseThrow(() -> new RuntimeException("Size not found")))
-                .flatMap(List::stream) // Làm phẳng danh sách các SizeEntity thành một Stream duy nhất
-                .collect(Collectors.toList());
-        ProductEntity productSize = productRepository.findProductById(id)
-        productRepository.save(productSize);*/
     }
 
     @Override

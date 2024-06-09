@@ -1,8 +1,18 @@
 package com.skyline.SalesManager.response;
 
-public class ResponseError extends ResponseData {
+import lombok.Getter;
+import lombok.Setter;
 
-    public ResponseError(int status, String message) {
-        super(status, message);
-    }
+import java.util.Date;
+
+@Getter
+@Setter
+public class ResponseError{
+
+    private Date timestamp;
+    private int status;
+    private String part;
+    private String error;
+    private String message;
+
 }

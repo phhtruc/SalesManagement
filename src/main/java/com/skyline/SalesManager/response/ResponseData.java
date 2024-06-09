@@ -2,7 +2,6 @@ package com.skyline.SalesManager.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public class ResponseData<T> {

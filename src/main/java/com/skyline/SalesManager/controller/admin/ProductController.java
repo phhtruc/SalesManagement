@@ -3,14 +3,15 @@ package com.skyline.SalesManager.controller.admin;
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.repository.ProductRepository;
 import com.skyline.SalesManager.response.ResponseData;
+import com.skyline.SalesManager.response.ResponseError;
 import com.skyline.SalesManager.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,7 +63,7 @@ public class ProductController {
             productService.updateProduct(idProduct, productDTO, multipartFile);
             return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Update product success");
         }catch (Exception e){
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Update Product Failed");
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
     }
 
