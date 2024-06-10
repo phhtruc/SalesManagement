@@ -3,26 +3,28 @@ package com.skyline.SalesManager.controller.admin;
 import com.skyline.SalesManager.dto.ProductDTO;
 import com.skyline.SalesManager.repository.ProductRepository;
 import com.skyline.SalesManager.response.ResponseData;
-import com.skyline.SalesManager.response.ResponseError;
 import com.skyline.SalesManager.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/products")
+@Tag(name ="Product Controller")
 public class ProductController {
 
     private final ProductRepository productRepository;
 
     private final ProductService productService;
 
+    @Operation(summary = "Get All Product", description = "API get all product")
     @GetMapping
     public ResponseData<?> getAllProducts(){
         try {
