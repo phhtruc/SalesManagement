@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  api-service:
+    container_name: api-service-container
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      API_TITLE: API-Service
+    ports:
+      - "8080:8181"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

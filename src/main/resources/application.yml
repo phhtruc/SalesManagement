@@ -8,7 +8,7 @@ spring:
       max-file-size: 2MB
       max-request-size: 2MB
   profiles:
-    active: dev
+    active: @spring.profiles.active@
 
   jpa:
     hibernate:
@@ -26,40 +26,3 @@ application:
       expriration : 86400000 # a day
       refresh-token :
         expriration : 604800000 # 7 days
-
-#server:
-#  port: 8181
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-openapi:
-  service:
-    api-docs: api-service
-    server: http://localhost:8181
-    title: API Service
-    version: 1.0.0
----
-spring:
-  config:
-    activate:
-      on-profile: test
-openapi:
-  service:
-    api-docs: api-service
-    server: http://localhost:8183
-    title: API Service
-    version: 1.0.0
----
-spring:
-  config:
-    activate:
-      on-profile: product
-openapi:
-  service:
-    api-docs: api-service
-    server: http://localhost:8184
-    title: API Service
-    version: 1.0.0
