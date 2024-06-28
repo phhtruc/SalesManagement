@@ -5,13 +5,13 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="Brand")
+@Table(name="brand")
 public class BrandEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idBrand;
 
-    @Column(name="brandName")
+    @Column(name="brand_name")
     private String brandName;
 }

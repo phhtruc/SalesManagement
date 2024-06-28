@@ -1,14 +1,19 @@
 package com.skyline.SalesManager.service.impl;
 
-import com.skyline.SalesManager.dto.ProductDTO;
+import com.skyline.SalesManager.dto.request.ProductRequestDTO;
+import com.skyline.SalesManager.dto.response.PageResponse;
+import com.skyline.SalesManager.dto.response.ProductResponseDTO;
 import com.skyline.SalesManager.entity.*;
 import com.skyline.SalesManager.repository.*;
-import com.skyline.SalesManager.response.ResponseError;
 import com.skyline.SalesManager.service.ImageService;
 import com.skyline.SalesManager.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -27,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     private final ImageService imageService;
 
     @Override
-    public ProductDTO addProduct(ProductDTO p, List<MultipartFile> multipartFile) {
+    public ProductResponseDTO addProduct(ProductRequestDTO p, List<MultipartFile> multipartFile) {
         BrandEntity brand = brandRepository.findByBrandName(p.getBrandName())
                 .orElseThrow(() -> new RuntimeException("Brand not found"));
         CategoryEntity category = categoryRepository.findByCateName(p.getCategoryName())
@@ -60,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
         productImageRepository.saveAll(productImages);
 
-        return ProductDTO.builder()
+        return ProductResponseDTO.builder()
                 .idProduct(product.getIdProduct())
                 .productName(p.getProductName())
                 .price(p.getPrice())
@@ -75,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(long id, ProductDTO productDTO, List<MultipartFile> multipartFile) {
+    public void updateProduct(long id, ProductRequestDTO productDTO, List<MultipartFile> multipartFile) {
         Optional<BrandEntity> brand = Optional.of(brandRepository.findByBrandName(productDTO.getBrandName())
                 .orElseThrow(() -> new RuntimeException("Brand not found")));
         Optional<CategoryEntity> category = Optional.of(categoryRepository.findByCateName(productDTO.getCategoryName())
@@ -113,23 +119,42 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findProductById(long idProduct) {
+    public ProductResponseDTO findProductById(long idProduct) {
         Optional<List<String>> listSizeName = sizeRepository.findSizeNameByIdProduct(idProduct);
         Optional<List<String>> listFileName = productImageRepository.findImageNameByIdProduct(idProduct);
-        ProductDTO productDTO = productRepository.findProductById(idProduct);
-        productDTO.setSizeName(listSizeName.orElseThrow(() -> new RuntimeException("Size not found")));
-        productDTO.setFileName(listFileName.orElseThrow(() -> new RuntimeException("File not found")));
-        return productDTO;
+        Optional<ProductResponseDTO> responseDTO = productRepository.findProductById(idProduct).map(productResponseDTO -> {
+            productResponseDTO.setSizeName(listSizeName.orElseThrow());
+            productResponseDTO.setFileName(listFileName.orElseThrow());
+            return productResponseDTO;
+        });
+        return responseDTO.orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override
-    public List<ProductDTO> findAllProducts() {
-        return productRepository.findAllProduct().stream()
+    public PageResponse<?> findAllProducts(int pageNo, int pageSize) {
+        int page = 0;
+        if(pageNo > 0){
+            page = pageNo - 1;
+        }
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("idProduct").ascending());
+        //Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC), sortBy);
+
+        Page<ProductResponseDTO> productResponseDTOS = productRepository.findAllProduct(pageable);
+
+        List<ProductResponseDTO> pro = productResponseDTOS.stream()
                 .peek(p -> {
                     p.setSizeName(sizeRepository.findSizeNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("Size not found")));
                     p.setFileName(productImageRepository.findImageNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("File not found")));
                 })
                 .collect(Collectors.toList());
+
+        return PageResponse.builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .totalPage(productResponseDTOS.getTotalPages())
+                .items(pro)
+                .build();
     }
 
 }

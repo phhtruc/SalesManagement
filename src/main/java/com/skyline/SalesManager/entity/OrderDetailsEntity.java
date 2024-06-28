@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "OrderDetails")
+@Table(name = "order_details")
 public class OrderDetailsEntity extends BaseEntity{
 
     @EmbeddedId
@@ -19,13 +19,13 @@ public class OrderDetailsEntity extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idProduct")
-    @JoinColumn(name = "idProduct", nullable = false)
+    @JoinColumn(name = "id_product", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductEntity productEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idOrder")
-    @JoinColumn(name = "idOrder", nullable = false)
+    @JoinColumn(name = "id_order", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private OrderEntity orderEntity;
 
@@ -46,11 +46,12 @@ public class OrderDetailsEntity extends BaseEntity{
 @Data
 class OrderDetailsId implements Serializable {
 
-    @Column(name = "idOrder")
+    @Column(name = "id_order")
     private long idOrder;
 
-    @Column(name = "idProduct")
+    @Column(name = "id_product")
     private long idProduct;
 
 }
+
 

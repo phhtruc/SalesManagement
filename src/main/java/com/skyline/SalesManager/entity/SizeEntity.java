@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "Size")
+@Table(name = "size")
 public class SizeEntity extends BaseEntity{
 
     @Id
@@ -16,10 +16,10 @@ public class SizeEntity extends BaseEntity{
     private long idSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCate")
+    @JoinColumn(name = "id_cate")
     private CategoryEntity categoryEntity;
 
-    @Column(name = "sizeName")
+    @Column(name = "size_name")
     private String sizeName;
 
     @ManyToMany(mappedBy = "sizes")

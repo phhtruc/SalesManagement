@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
-@Table(name = "Product")
+@Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductEntity extends BaseEntity{
@@ -25,7 +25,7 @@ public class ProductEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idProduct;
 
-    @Column(name="productName")
+    @Column(name="product_name")
     private String productName;
 
     @Column(name="price")
@@ -40,17 +40,17 @@ public class ProductEntity extends BaseEntity{
     private int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE) // optional entity bat buoc, phai co .
-    @JoinColumn(name = "idBrand", nullable = false)
+    @JoinColumn(name = "id_brand", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private BrandEntity brandEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE) // optional entity bat buoc, phai co .
-    @JoinColumn(name = "idCate", nullable = false)
+    @JoinColumn(name = "id_cate", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private CategoryEntity categoryEntity;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "Product_size", joinColumns = @JoinColumn(name = "idProduct"),
-            inverseJoinColumns = @JoinColumn(name = "idSize"))
+    @JoinTable(name = "product_size", joinColumns = @JoinColumn(name = "id_product"),
+            inverseJoinColumns = @JoinColumn(name = "id_size"))
     List<SizeEntity> sizes = new ArrayList<>();
 }

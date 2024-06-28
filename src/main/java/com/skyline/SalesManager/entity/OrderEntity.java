@@ -9,7 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Data
 @Entity
-@Table(name = "[Order]")
+@Table(name = "`order`")
 public class OrderEntity extends BaseEntity{
 
     @Id
@@ -17,11 +17,11 @@ public class OrderEntity extends BaseEntity{
     private long idOrder;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "idUser", nullable = false)
+    @JoinColumn(name = "id_user", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity userEntity;
 
-    @Column(name = "[address]")
+    @Column(name = "address")
     private String address;
 
     @Column(name = "phone", unique = true)
@@ -39,7 +39,7 @@ public class OrderEntity extends BaseEntity{
     private String paymentStatus;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "idVoucher", nullable = false)
+    @JoinColumn(name = "id_voucher", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private VoucherEntity voucherEntity;
 }

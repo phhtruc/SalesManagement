@@ -1,4 +1,4 @@
-package com.skyline.SalesManager.dto;
+package com.skyline.SalesManager.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -11,9 +11,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO implements Serializable {
+public class ProductRequestDTO implements Serializable {
 
-    private long idProduct;
+    private Long idProduct;
 
     @NotBlank(message = "productName must be not blank")
     private String productName;
@@ -25,7 +25,7 @@ public class ProductDTO implements Serializable {
     private String description;
 
     @Min(1)
-    private int quantity;
+    private Integer quantity;
 
     @NotNull(message = "brandName must be not null")
     private String brandName;
@@ -37,16 +37,5 @@ public class ProductDTO implements Serializable {
     private List<String> sizeName;
 
     private List<String> fileName;
-
-    public ProductDTO(long idProduct, String productName, @Positive Double price, String description,
-                      @Min(1) int quantity, String brandName, String categoryName) {
-        this.idProduct = idProduct;
-        this.productName = productName;
-        this.price = price;
-        this.description = description;
-        this.quantity = quantity;
-        this.brandName = brandName;
-        this.categoryName = categoryName;
-    }
 
 }

@@ -1,17 +1,18 @@
-package com.skyline.SalesManager.response;
+package com.skyline.SalesManager.exception;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
-public class ResponseError{
+public class ErrorResponse implements Serializable {
 
     private Date timestamp;
     private int status;
-    private String part;
+    private String path;
     private String error;
     private String message;
 

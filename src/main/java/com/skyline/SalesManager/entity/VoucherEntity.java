@@ -11,34 +11,34 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "Voucher")
+@Table(name = "voucher")
 public class VoucherEntity extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idVoucher;
 
-    @Column(name = "voucherCode", unique = true)
+    @Column(name = "voucher_code", unique = true)
     private String VoucherCode;
 
-    @Column(name = "discountAmount")
+    @Column(name = "discount_amount")
     @Positive
     private double discountAmount;
 
-    @Column(name = "[percentage]")
+    @Column(name = "percentage")
     @Positive
     private int percentage;
 
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     private Date startDate;
 
-    @Column(name = "endDate")
+    @Column(name = "end_date")
     private Date endDate;
 
-    @Column(name = "usageLimit")
+    @Column(name = "usage_limit")
     private int usageLimit;
 
-    @Column(name = "conditionPrice")
+    @Column(name = "condition_price")
     @Min(value = 0)
     private int conditionPrice;
 

@@ -14,7 +14,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "Token")
+@Table(name = "token")
 public class Token {
 
     @Id

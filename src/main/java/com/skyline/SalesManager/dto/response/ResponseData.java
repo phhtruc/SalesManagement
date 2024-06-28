@@ -1,4 +1,4 @@
-package com.skyline.SalesManager.response;
+package com.skyline.SalesManager.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

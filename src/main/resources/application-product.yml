@@ -1,12 +1,31 @@
 server:
   port: 8183
+
 spring:
   config:
     activate:
       on-profile: product
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
 openapi:
   service:
     api-docs: api-service
     server: http://localhost:${server.port}
-    title: API Service
+    title: ${API_TITLE:DUMMY-API-TITLE}
     version: 1.0.0
+

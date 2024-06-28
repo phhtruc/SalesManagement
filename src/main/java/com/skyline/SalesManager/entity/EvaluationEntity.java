@@ -9,21 +9,21 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "Evaluation")
+@Table(name = "evaluation")
 public class EvaluationEntity extends BaseEntity{
 
     @EmbeddedId
     private EvaluationId id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
-    @MapsId("idCust")
-    @JoinColumn(name = "idUser", nullable = false)
+    @MapsId("idUser")
+    @JoinColumn(name = "id_user", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     @MapsId("idProduct")
-    @JoinColumn(name = "idProduct", nullable = false)
+    @JoinColumn(name = "id_product", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductEntity productEntity;
 
@@ -36,16 +36,17 @@ public class EvaluationEntity extends BaseEntity{
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "imageContent")
+    @Column(name = "image_content")
     private String imageContent;
 }
+
 @Embeddable
 @Data
 class EvaluationId implements Serializable {
 
-    @Column(name = "idCust")
-    private long idCust;
+    @Column(name = "id_user")
+    private long idUser;
 
-    @Column(name = "idProduct")
+    @Column(name = "id_product")
     private long idProduct;
 }

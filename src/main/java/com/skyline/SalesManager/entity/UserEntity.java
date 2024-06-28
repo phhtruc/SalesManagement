@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "[User]")
+@Table(name = "user")
 public class UserEntity extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idUser;
 
-    @Column(name = "fullName")
+    @Column(name = "full_name")
     private String fullName;
 
     @Column(name = "email", unique = true)
@@ -42,7 +42,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Pattern(regexp = "^0[0-9]{9}$")
     private String phone;
 
-    @Column(name = "[password]")
+    @Column(name = "password")
     private String password;
 
     @Column(name = "avatar")
@@ -53,13 +53,13 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private UserStatus userStatus;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idRole"))
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_role"))
     List<RoleEntity> roles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idVoucher"))
+    @JoinTable(name = "user_voucher", joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_voucher"))
     List<VoucherEntity> vouchers = new ArrayList<>();
 
 
