@@ -64,7 +64,7 @@ public class JwtService {
     private String buildToken(Map<String, Object> extractClaims, UserDetails userDetails, long expriration){
         return Jwts
                 .builder() // Khởi tạo một JWT builder object để xây dựng token mới.
-                .setClaims(extractClaims) // Thiết lập các claim bổ sung từ map extraClaims vào token.
+                .setClaims(extractClaims) // Thiết lập các claim bổ sung từ map extraClaims vào token(những thông tin không muốn public ra ngoài).
                 .setSubject(userDetails.getUsername()) // Thiết lập claim "subject" (chủ thể) của token bằng username của người dùng.
                 .setIssuedAt(new Date(System.currentTimeMillis())) // thời gian bắt đầu
                 .setExpiration(new Date(System.currentTimeMillis() + expriration)) // thời gian kết thúc sau 1 ngày

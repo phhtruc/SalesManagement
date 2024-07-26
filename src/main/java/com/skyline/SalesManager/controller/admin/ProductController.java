@@ -27,7 +27,6 @@ public class ProductController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
     private final ProductRepository productRepository;
-
     private final ProductService productService;
 
     @Operation(summary = "Get All Product", description = "API get all product")
