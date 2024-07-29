@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -131,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageResponse<?> findAllProducts(int pageNo, int pageSize) {
+    public PageResponse<?> findAllProducts(int pageNo, int pageSize, String seacrh) {
         int page = 0;
         if(pageNo > 0){
             page = pageNo - 1;
@@ -140,7 +141,51 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("idProduct").ascending());
         //Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC), sortBy);
 
-        Page<ProductResponseDTO> productResponseDTOS = productRepository.findAllProduct(pageable);
+        if(StringUtils.hasText(seacrh)){
+            Page<ProductResponseDTO> productResponseDTOS = productRepository.findAllProduct(pageable, seacrh);
+
+            List<ProductResponseDTO> pro = productResponseDTOS.stream()
+                    .peek(p -> {
+                        p.setSizeName(sizeRepository.findSizeNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("Size not found")));
+                        p.setFileName(productImageRepository.findImageNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("File not found")));
+                    })
+                    .collect(Collectors.toList());
+
+            return PageResponse.builder()
+                    .pageNo(pageNo)
+                    .pageSize(pageSize)
+                    .totalPage(productResponseDTOS.getTotalPages())
+                    .items(pro)
+                    .build();
+        }
+        else {
+            Page<ProductResponseDTO> productResponseDTOS = productRepository.findAllProduct(pageable);
+
+            List<ProductResponseDTO> pro = productResponseDTOS.stream()
+                    .peek(p -> {
+                        p.setSizeName(sizeRepository.findSizeNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("Size not found")));
+                        p.setFileName(productImageRepository.findImageNameByIdProduct(p.getIdProduct()).orElseThrow(() -> new RuntimeException("File not found")));
+                    })
+                    .collect(Collectors.toList());
+
+            return PageResponse.builder()
+                    .pageNo(pageNo)
+                    .pageSize(pageSize)
+                    .totalPage(productResponseDTOS.getTotalPages())
+                    .items(pro)
+                    .build();
+        }
+    }
+
+    @Override
+    public PageResponse<?> getProductsByCategory(String category, int pageNo, int pageSize) {
+        int page = 0;
+        if(pageNo > 0){
+            page = pageNo - 1;
+        }
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("idProduct").ascending());
+        Page<ProductResponseDTO> productResponseDTOS = productRepository.findProductsByCategoryName(pageable, category);
 
         List<ProductResponseDTO> pro = productResponseDTOS.stream()
                 .peek(p -> {

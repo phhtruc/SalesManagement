@@ -30,11 +30,12 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "Get All Product", description = "API get all product")
-    @GetMapping
-    public ResponseData<?> getAllProducts(@RequestParam(required = false, defaultValue = "1") int pageNo,
-                                          @Min(10) @RequestParam(required = false, defaultValue = "10") int pageSize){
+    @GetMapping()
+    public ResponseData<?> getAllProducts(@RequestParam(required = false, defaultValue = "1") int page,
+                                          @Min(10) @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                          @RequestParam(required = false) String search){
         try {
-            return new ResponseData<>(HttpStatus.OK.value(), "Get All Product Success", productService.findAllProducts(pageNo,pageSize));
+            return new ResponseData<>(HttpStatus.OK.value(), "Get All Product Success", productService.findAllProducts(page, pageSize, search));
         }catch (Exception e){
             log.error("errorMessage{}", e.getMessage(), e.getCause());
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Get All Product Failed");
@@ -81,6 +82,17 @@ public class ProductController {
         try {
             productRepository.deleteById(idProduct);
             return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Delete product success");
+        }catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Delete Product Failed");
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseData<?> getProductsByCategory(@RequestParam(required = false) String category,
+                                                 @RequestParam(required = false, defaultValue = "1") int page,
+                                                 @Min(10) @RequestParam(required = false, defaultValue = "10") int pageSize){
+        try {
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "Delete product success", productService.getProductsByCategory(category, page, pageSize));
         }catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Delete Product Failed");
         }

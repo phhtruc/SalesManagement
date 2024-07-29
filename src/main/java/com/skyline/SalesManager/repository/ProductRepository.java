@@ -19,6 +19,15 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             """)
     Page<ProductResponseDTO> findAllProduct(Pageable pageable);
 
+    @Query("""
+            SELECT new com.skyline.SalesManager.dto.response.ProductResponseDTO(p.idProduct, p.productName, p.price, p.description, p.quantity, b.brandName, c.cateName)
+            FROM ProductEntity p
+            JOIN p.brandEntity b
+            JOIN p.categoryEntity c
+            where p.productName like %:search%
+            """)
+    Page<ProductResponseDTO> findAllProduct(Pageable pageable, String search);
+
 
     @Query("""
     select new com.skyline.SalesManager.dto.response.ProductResponseDTO(p.idProduct, p.productName, p.price, p.description, p.quantity, b.brandName, c.cateName)
@@ -27,4 +36,12 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     """)
     Optional<ProductResponseDTO> findProductById(Long idProduct);
 
+    @Query("""
+            SELECT new com.skyline.SalesManager.dto.response.ProductResponseDTO(p.idProduct, p.productName, p.price, p.description, p.quantity, b.brandName, c.cateName)
+            FROM ProductEntity p
+            JOIN p.brandEntity b
+            JOIN p.categoryEntity c
+            WHERE c.cateName = :cateName
+            """)
+    Page<ProductResponseDTO> findProductsByCategoryName(Pageable pageable, String cateName);
 }

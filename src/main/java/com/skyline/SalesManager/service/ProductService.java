@@ -17,5 +17,7 @@ public interface ProductService {
 
     ProductResponseDTO findProductById(long idProduct);
 
-    PageResponse<?> findAllProducts(int pageNo, int pageSize);
+    PageResponse<?> findAllProducts(int pageNo, int pageSize, String search);
+
+    PageResponse<?> getProductsByCategory(String category, int pageNo, int pageSize);
 }
